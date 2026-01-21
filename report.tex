@@ -1,0 +1,407 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\usepackage[utf8]{inputenc}
+\begin{document}
+
+\title{ AI-Powered E-Commerce Product Recommendation System\\
+}
+
+\author{ \begin{tabular}{cc} \begin{tabular}{c} \textbf{Kavya Trivedi} \\ \textit{Dept. of ISE} \\ \textit{RV College Of Engineering} \\ Bengaluru, Karnataka, India \\ \texttt{kavyatrivedi.is23@rvce.edu.in} \end{tabular} & \begin{tabular}{c} \textbf{Poornashree HV} \\ \textit{Dept. of ISE} \\ \textit{RV College Of Engineering} \\ Bengaluru, Karnataka, India \\ \texttt{poornashreehv.is24@rvce.edu.in} \end{tabular} & \\ \end{tabular} }
+
+\maketitle
+\
+\begin{abstract}
+Traditional e-commerce search engines that
+rely on keywords and static filters often fail to capture
+nuanced user intent, particularly when users express
+needs in terms of visual style, vague descriptions, or a
+combination of text and images. This leads to
+suboptimal recommendations, lower user satisfaction,
+and missed revenue opportunities for online platforms.
+This paper proposes an AI-powered Generative
+Multimodal Recommendation System (GMRS) that
+reframes product discovery as an interactive,
+dialog-driven process. The system encodes textual and
+visual information into a shared embedding space,
+indexes the catalog in a vector database, and employs a
+Generative Feedback Loop (GFL) to iteratively refine
+ambiguous user queries through synthetic images and
+refined descriptions. A time-decay user profile vector
+captures long-term preferences, while a hybrid ranking
+and re-ranking layer personalizes results and enforces
+business constraints such as stock status and recency.
+Using a Flipkart e-commerce dataset, the proposed
+approach is designed to provide more precise,
+trustworthy, and engaging product recommendations
+than conventional search and recommendation
+pipelines.
+
+ 
+
+
+
+ 
+
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+E-commerce recommendation,
+generative feedback loop, multimodal embeddings,
+vector databases.
+\end{IEEEkeywords}
+\section{Introduction}
+\subsection{Background and Context}
+Contemporary e-commerce platforms operate at massive scale, hosting millions of heterogeneous products spanning diverse categories, visual styles, and functional attributes. Despite this complexity, user interaction paradigms remain largely constrained to keyword-based search interfaces and manually configured static filters. Such mechanisms are fundamentally ill-equipped to capture nuanced, subjective, or visually grounded user intent, particularly when preferences are expressed through ambiguous natural language constructs (e.g., “mugs with purple elephants on them”) or fine-grained stylistic constraints (e.g., “vertically striped shirts, not horizontal”). As online catalogs expand and consumer expectations shift toward more intuitive, human-like discovery experiences, the mismatch between expressive user intent and rigid retrieval systems has become increasingly pronounced.
+
+\subsection{Problem Statement}
+
+Conventional recommendation and retrieval systems in e-commerce predominantly rely on text-based metadata matching and structured attribute filtering. These approaches fail when product descriptions are incomplete, inconsistently annotated, or incapable of encoding visual semantics. Consequently, queries such as “mugs with purple elephants” cannot be reliably resolved unless such details are explicitly embedded in product metadata, while broader descriptors like “striped shirts” indiscriminately return semantically divergent results, including both vertical and horizontal patterns. Although recent advances in multimodal deep learning have enabled joint reasoning over text and images, these models remain vulnerable to semantic ambiguity when user intent spans multiple modalities. Moreover, naïvely deploying powerful Generative Large Language Models (LLMs) for retrieval introduces the risk of hallucinated product attributes, undermining trust and system reliability. This exposes a critical architectural gap: the absence of a principled framework that harmonizes multimodal understanding, generative reasoning, and deterministic vector-based retrieval to systematically disambiguate user intent prior to recommendation execution.
+
+\subsection{Research Gap}
+
+While existing literature extensively explores collaborative filtering, content-based recommendation, and deep representation learning, most approaches treat multimodal signals in isolation or as shallow feature augmentations. Limited work has investigated the unified integration of semantic product embeddings, user interaction dynamics, and multi-layer hybrid scoring mechanisms within a single, scalable recommendation engine. Furthermore, graph-based learning techniques that capture complex user–item relational structures remain underutilized in large-scale e-commerce environments. This gap is particularly evident in real-world, high-volume datasets such as those derived from Flipkart, where heterogeneous product representations, evolving user preferences, and sparse annotations pose substantial modeling challenges. The absence of end-to-end architectures capable of resolving multimodal ambiguity while maintaining retrieval precision represents a significant limitation in current systems.
+
+\subsection{Objectives}
+
+The primary objective of this project is to evaluate the effectiveness of a Generative Multimodal Recommendation System (GMRS) in delivering precise, context-aware, and trustworthy product recommendations within a large-scale e-commerce ecosystem. To achieve this, the system constructs a robust multimodal encoding pipeline that transforms both product information and user inputs—spanning textual descriptions and visual cues—into a unified embedding space suitable for similarity-based reasoning. A scalable vector database infrastructure is employed to enable high-throughput Approximate Nearest Neighbor (ANN) retrieval across extensive product catalogs. Central to the architecture is a Generative Feedback Loop (GFL) that iteratively refines ambiguous or underspecified user queries, ensuring intent clarification while minimizing hallucination risks associated with direct generative retrieval. Additionally, a hybrid recommendation module integrates GFL-refined intent vectors with time-decay–weighted user profile embeddings, enabling personalized, adaptive recommendations that evolve in response to changing user behavior.
+
+\subsection{Significance and Contribution}
+This work introduces a scalable, multi-factor hybrid recommendation framework that synergistically combines multimodal embeddings, generative reasoning, and graph-aware user–item modeling. By explicitly addressing semantic ambiguity and hallucination risks, the proposed system enhances product discoverability and delivers more faithful, intent-aligned recommendations. The framework not only improves user satisfaction through personalized and context-sensitive shopping experiences but also provides tangible benefits to business stakeholders by increasing engagement, conversion efficiency, and long-term customer retention. More broadly, the project establishes a generalizable architectural paradigm for integrating generative intelligence with deterministic retrieval in real-world recommender systems.
+
+
+
+\section{Literature Survey}In the study [1], Wasilewski et al. proposed an
+AI-powered personalization framework that combined
+multivariate user interfaces (MultiUI) with AI-generated
+product descriptions. Their findings demonstrated
+significant improvement in customer engagement and
+conversion rates due to tailored and audience-specific
+content. However, the generated text exhibited
+repetition, prompt dependency, and unaddressed
+hallucination risks, limiting scalability. \par
+According to [2], Liu et al. conducted an extensive
+survey on Multimodal Recommender Systems (MRS),
+highlighting the use of visual and textual features to
+reduce sparsity and strengthen preference modeling. The
+review emphasized key phases such as feature
+representation, fusion, and interaction. However, it also
+concluded that no standardized multimodal architecture
+currently exists and that the computational cost of
+multimodal encoders remains a major drawback. \par
+In [3], Shankar et al. introduced VisNet, a deep
+CNN-based model designed for visual search and
+recommendations in large e-commerce catalogs. The
+model captured high-level and fine-grained visual
+features effectively and achieved a 26% conversion rate
+when deployed at Flipkart. Nevertheless, the system
+struggled with complex backgrounds, poor lighting, and
+cold-start conditions, and incurred high computational
+expense due to reliance on k-NN retrieval. \par
+The study [4] by Ataur Rahman explored multiple
+machine-learning algorithms—including Random Forest,
+Logistic Regression, Gaussian Naive Bayes, and
+Decision Tree—for building an e-commerce
+recommendation system. With PCA-based
+dimensionality reduction, the Random Forest model
+achieved an accuracy of approximately 99.6%,
+outperforming other algorithms. However, the
+framework relied solely on structured attributes and did
+not incorporate multimodal features, reducing its
+applicability to real-world environments. \par
+In [5], Zeng Huan examined the application of graph
+neural networks for personalized recommendations by
+modeling relational dependencies between users,
+products, and product attributes. The findings
+highlighted the potential of GNNs in capturing complex
+preference signals. Yet the study remained conceptual in
+nature and did not demonstrate a full-scale deployment
+or multimodal intent-disambiguation mechanism. \par
+According to [6], Aarti Chaudhari and Shital Hajare discussed AI-powered personalization in e-commerce using machine learning, deep learning, and NLP techniques. The study highlighted the role of AI in understanding customer preferences and shopping behavior. However, the work remained conceptual and did not present a concrete system architecture. \par
+
+In the work [7], Ajeet Tiwari and Sheshpal Namdeo analyzed the impact of AI-driven personalized recommendations on consumer purchasing behavior. Their findings showed increased customer trust, satisfaction, and engagement. However, the study focused on behavioral analysis rather than technical system implementation. \par
+
+The study [8] presented an AI-driven e-commerce recommendation model that analyzed user behavior to enhance product relevance. The system improved recommendation accuracy through machine learning techniques. However, it did not address ambiguity in user intent or real-time personalization. \par
+
+According to, [9], Zhang et al. explored conversational recommendation systems using dialogue-based interactions for preference elicitation. The approach improved recommendation relevance through continuous user feedback. Despite its advantages, the system required large datasets and lacked robust multimodal intent disambiguation \par
+
+Finally, [10] by Nancy Thomar proposed a CNN-based
+deep recommendation approach capable of enhancing
+user satisfaction and accuracy by reducing information
+overload. While the model successfully extracted deep
+features for personalization, it was constrained by dataset
+dependency, high computational cost, and performance
+degradation in cold-start scenarios.
+
+\section{Methodology}
+
+This section explains the structured approach followed to
+design and develop the proposed AI-Powered Generative
+Multimodal Recommendation System (GMRS). The
+methodology integrates multimodal data processing,
+vector-based retrieval, generative feedback mechanisms,
+and hybrid recommendation modeling for precise
+personalization. 
+
+\subsection{Dataset Acquisition and Description}
+The Flipkart Product Dataset was extracted from
+Kaggle, containing product titles, descriptions,
+categories, brand attributes, price ranges, ratings, and
+high-resolution product images. This dataset serves as
+the primary knowledge base for the recommendation
+engine and enables both textual and visual preference
+modeling.
+
+\subsection{Data Preprocessing and Feature Engineering}
+
+Textual data undergoes standard preprocessing including tokenization, lowercasing, stop-word removal, and semantic normalization to remove noise while preserving contextual meaning. Image data is resized, normalized, and converted to a fixed resolution suitable for deep feature extraction. Both modalities are aligned temporally and indexed to ensure consistent mapping between textual and visual representations.
+
+\subsection{Multimodal Embedding Pipeline}
+
+The product images and text were processed through
+Jina-embeddings-v4 to convert them into dense
+numerical feature vectors representing high-level visual
+and semantic characteristics. This multimodal encoding
+helped the system understand user prompts regardless
+of whether preferences were expressed through words
+or images.
+
+\subsection{Scalable Vector Indexing Infrastructure}
+All product embeddings are stored in a vector database to support scalable
+Approximate Nearest Neighbor (ANN) retrieval.
+
+Let the embedding matrix be defined as:
+\[
+\mathbf{E} = \{ \mathbf{E}_1, \mathbf{E}_2, \ldots, \mathbf{E}_n \}
+\]
+
+Given a query embedding $\mathbf{q}$, similarity between the query and a
+product embedding $\mathbf{E}_i$ is computed using cosine similarity:
+\[
+\mathrm{sim}(\mathbf{q}, \mathbf{E}_i) =
+\frac{\mathbf{q} \cdot \mathbf{E}_i}
+{\lVert \mathbf{q} \rVert \, \lVert \mathbf{E}_i \rVert}
+\]
+
+The system retrieves the top-$K$ most similar products as:
+\[
+\mathcal{P}_{\text{top-}K}
+=
+\underset{\mathbf{E}_i \in \mathbf{E}}{\arg\max_{K}}
+\; \mathrm{sim}(\mathbf{q}, \mathbf{E}_i)
+\]
+
+ANN indexing structures ensure near logarithmic-time retrieval even for
+large-scale product catalogs.
+
+
+\subsection{User Profile Modeling}
+
+The system maintains a time-decay weighted user
+preference vector that evolves with each interaction.
+Product clicks, browsing duration, and past
+confirmations feed into the user profile, strengthening
+the system’s ability to provide long-term personalized
+recommendations.
+
+\subsection{Generative Feedback Loop (GFL)}
+
+A novel GFL mechanism was integrated to enable interactive refinement of user intent. Instead of relying solely on the initial search prompt, the system generates candidate suggestions, seeks user feedback, and corrects ambiguity iteratively — thereby minimizing hallucination risk and maximizing relevance.
+This iterative interaction ensures that intent clarification is grounded in retrieved results rather than unconstrained generative outputs.
+
+\subsection{Image-Driven Preference Augmentation}
+
+When users upload a reference image, models such as Flux or Wan2.1 generate variations to interpret hidden visual intent (e.g., texture, pattern, color). The enhanced visual cues are combined with the user’s textual feedback to refine the target embedding for retrieval.
+This approach improves understanding of implicit visual preferences that are difficult to express through text alone.
+
+\subsection{Hybrid Recommendation Engine}
+
+The refined embedding obtained from the GFL is fused with the user profile vector using a hybrid filtering mechanism that combines content-based similarity and collaborative behavior patterns. This enables the system to recommend frequently bought items, visually similar products, and personalized alternatives within one unified framework.
+The hybrid design balances relevance, personalization, and diversity in the final recommendation list.
+
+\subsection{Approximate Nearest Neighbor Retrieval}
+
+The recommendation engine retrieves the most relevant products by performing ANN similarity search over the vector index. This step generates the top-K results that best match the target embedding derived from the GFL-enhanced intent.
+ANN-based retrieval ensures low-latency response while maintaining high retrieval accuracy at scale.
+
+\subsection{Frontend Interaction and Web-GIS-Style
+Visualization}
+The recommendations are delivered through a user-friendly web interface implemented using Streamlit and Python backend. The interface supports image uploads, multimodal search prompts, and iterative confirmation to facilitate an intuitive, agent-style shopping experience.
+This interactive design encourages user engagement and improves transparency in the recommendation process.
+\subsection{Performance Evaluation}
+
+System performance is evaluated based on
+recommendation accuracy, click-through rate (CTR),
+hit-ratio, relevance score improvement after each
+feedback cycle, and latency of ANN retrieval. Additional
+evaluation examines the GFL’s effectiveness in reducing
+ambiguity and improving final recommendation
+confidence.
+
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{image1.png}
+
+    \small\itshape
+    Fig. 1: Methodology
+\end{minipage}
+\end{center}
+
+
+
+\section{Results and Evaluation}
+
+This section evaluates the effectiveness of the proposed AI-Powered Generative Multimodal Recommendation System (GMRS) across its core functional components, focusing on multimodal intent understanding, ambiguity resolution through generative feedback, personalization via user profiling, and scalable vector-based retrieval. All results are obtained using identical dataset partitions, embedding models, vector indexing parameters, and evaluation metrics as described in the Methodology section.
+
+\subsection{Experimental Setup}
+
+Evaluation was conducted on the Flipkart e-commerce dataset comprising product titles, descriptions, categorical metadata, pricing information, and high-resolution product images. The dataset was indexed using a vector database after multimodal embedding generation. User interaction simulations were performed across multiple query scenarios, including text-only, image-only, and combined multimodal inputs.
+
+Each experiment consisted of multiple recommendation sessions with iterative feedback cycles enabled through the Generative Feedback Loop (GFL). For each session, the system generated top-K recommendations over several feedback iterations. All reported trends represent averaged results across multiple independent runs to mitigate stochastic variation in embedding similarity and retrieval ranking.
+
+Baseline comparisons include traditional keyword-based search, unimodal text-embedding retrieval, and direct retrieval without feedback refinement.
+
+\subsection{Multimodal Retrieval Effectiveness}
+
+Recommendation accuracy improved consistently when multimodal embeddings were employed. Text-only baselines frequently failed to capture visual attributes such as color patterns, textures, or stylistic elements. In contrast, the proposed multimodal pipeline successfully aligned user intent with visually and semantically relevant products.
+
+Queries involving ambiguous descriptors (e.g., style-based or visually grounded requests) showed substantial relevance improvement after multimodal encoding. Image-augmented queries produced higher hit ratios and reduced irrelevant retrievals compared to unimodal approaches.
+
+\subsection{Impact of Generative Feedback Loop (GFL)}
+
+The GFL played a critical role in resolving ambiguous or under-specified queries. Initial retrievals often contained semantically related but visually inconsistent items. However, after one to two feedback iterations, the system refined the target embedding, leading to noticeably improved recommendation relevance.
+
+This iterative refinement reduced reliance on direct generative outputs and minimized hallucination risks by grounding refinement decisions in vector similarity and user confirmation. The relevance score consistently increased across feedback cycles, demonstrating the effectiveness of interactive intent clarification.
+
+\subsection{Personalization and User Profile Adaptation}
+
+The time-decay weighted user profile vector significantly enhanced personalization over repeated interactions. As users interacted with recommended products, the system adapted to evolving preferences, prioritizing items aligned with both recent behavior and long-term interests.
+
+Users with interaction history received more context-aware recommendations, while cold-start scenarios benefited from multimodal similarity matching. The hybrid fusion of user profile vectors with GFL-refined embeddings resulted in higher click-through rates compared to static recommendation pipelines.
+
+\subsection{Scalability and ANN Retrieval Performance}
+
+The vector database enabled efficient Approximate Nearest Neighbor (ANN) search across the large product catalog. Retrieval latency remained low even as catalog size increased, validating the system’s suitability for real-world deployment.
+
+Compared to exhaustive similarity computation, ANN-based retrieval maintained competitive accuracy while significantly reducing response time. This trade-off ensured scalability without compromising recommendation quality.
+
+\subsection{User Interaction and System Interpretability}
+
+Repeated interaction with the GMRS resulted in improved user engagement and trust, as users progressively refined their queries based on system feedback. The dialogue-driven interaction enabled clearer expression of preferences, leading to faster convergence toward relevant recommendations. Users perceived the system as more intuitive and responsive compared to traditional keyword-based search interfaces. The Generative Feedback Loop enhanced transparency by allowing users to observe and influence the refinement process. This reduced the black-box perception typically associated with AI systems. Additionally, users demonstrated increased exploratory behavior while maintaining confidence in recommendation relevance. The system encouraged informed decision-making by aligning recommendations more closely with user intent over time. Overall, the interactive design contributed to a more explainable and user-centric recommendation experience.
+
+\subsection{Summary of Results}
+The experimental results demonstrate that the proposed GMRS successfully delivers progressive improvements in recommendation quality:
+
+\begin{itemize}
+    \item Multimodal embeddings significantly outperform text-only retrieval
+    \item Generative Feedback Loop effectively resolves ambiguous user intent
+    \item Time-decay user profiling enhances long-term personalization
+    \item ANN-based vector retrieval ensures scalable and low-latency performance
+\end{itemize}
+
+Overall, the evaluation confirms that combining multimodal representation learning, generative intent refinement, and vector-based retrieval creates a robust, trustworthy, and user-centric recommendation framework suitable for modern e-commerce platforms.
+
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{image2.jpeg}
+
+    \small\itshape
+    Fig. 2: Result without using Generative Feedback Loop
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{image3.jpeg}
+\end{minipage}
+\end{center}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{image4.jpeg}
+
+    \small\itshape
+    Fig. 3: Result using Generative Feedback Loop
+\end{minipage}
+\end{center}
+
+
+\begin{thebibliography}{00}
+
+\bibitem{b1}M. Wasilewski et al.,
+“Enhanced E-Commerce
+Personalization Through AI-Powered Content
+Generation Tools,
+” IEEE Access, 2025.
+
+\bibitem{b2} Y . Liu et al.,
+“Multimodal Recommender Systems: A
+Survey,
+” arXiv preprint arXiv:2302.03883v2, 2023/2024.
+[3] V . Shankar et al.,
+“Deep Learning-based Large-Scale
+Visual Recommendation and Search for E-Commerce,
+”
+arXiv preprint arXiv:1703.02344v1, 2017.
+
+\bibitem{b3} V . Shankar et al.,
+“Deep Learning-based Large-Scale
+Visual Recommendation and Search for E-Commerce,
+”
+arXiv preprint arXiv:1703.02344v1, 2017.
+
+\bibitem{b4}  A. Rahman,
+“E-Commerce Product Recommendation
+System Using Machine Learning Algorithms,
+” Published
+July 2024.
+
+\bibitem{b5}  H. Zeng,
+“The Application of Personalized
+Recommendation System Driven by Artificial
+Intelligence on E-Commerce Platforms,
+” 2024/2025.
+
+\bibitem{b6} A. Chaudhari and S. Hajare, “AI-powered personalization in e-commerce,” in Proc. IEEE Int. Conf. on Advances in Computing, Communication and Control, 2022, pp. 1–6.
+
+\bibitem{b7}A. Tiwari and S. Namdeo, “AI-driven personalized recommendations and their impact on consumer purchase behaviour: Insights from e-commerce platforms in emerging markets,” International Journal of Creative Research Thoughts (IJCRT), vol. 13, no. 7, pp. e115–e125, 2025.
+
+\bibitem{b8}S. Kumar, R. Patel, and P. Shah, “E-commerce product recommendation system using machine learning,” International Journal of Engineering Research and Technology (IJERT), vol. 11, no. 5, pp. 210–215, 2022
+
+\bibitem{b9} ] Y. Zhang, X. Chen, and L. Zhang, “Conversational recommender systems: A survey,” ACM Computing Surveys, vol. 52, no. 6, pp. 1–38, 2020.
+
+\bibitem{b10} N. Thomar,
+“Enhancing E-Commerce Experience
+Through Intelligent Recommendation,
+” 2024.
+
+
+\end{thebibliography}
+
+\vspace{12pt}
+
+
+
+\end{document}
